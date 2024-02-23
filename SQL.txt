@@ -1,0 +1,25 @@
+1. READ oprations
+
+SELECT * FROM Customers;
+SELECT first_name FROM Customers;
+SELECT first_name, last_name FROM Customers;
+SELECT * FROM Customers WHERE customer_id > 3;
+
+2. CREATE operations
+
+INSERT INTO Customers (customer_id,	first_name,	last_name,	age,	country)
+VALUES (6,'giorgi','utsunashvili',19,'Sakartvelo')
+
+INSERT INTO Customers
+VALUES (7,'giorgi','utsunashvili',19,'Sakartvelo')
+
+3. UPDATE operations
+
+UPDATE customers SET last_name = 'eloshvili' WHERE customer_id = 7
+UPDATE customers SET country = 'armenia' WHERE customer_id > 5
+
+4. DELETE operations
+
+DELETE FROM Customers WHERE customer_id = 7
+DELETE FROM Customers WHERE country = 'armenia'
+DELETE FROM Customers WHERE customer_id <=3;
