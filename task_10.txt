@@ -1,0 +1,34 @@
+create table TV (id,brand,price,quantity,length,width,color)
+
+----------------------------------
+
+insert into TV values
+(1,'sony',1000,10,80,40,'blue')
+(2,'philips',500,1,120,100,'yellow')
+(3,'samsung',2000,12,250,160,'blue')
+(4,'LG',300,20,50,20,'black')
+(5,'apple',5000,4,150,80,'white')
+(6,'bosch',800,30,220,170,'blue')
+
+----------------------------------
+
+select * from TV where price > 600
+
+----------------------------------
+
+select * from TV where quantity > 2 and color = 'blue'
+
+----------------------------------
+
+select
+   id,
+   brand,
+   price,
+   quantity,
+   length,
+   width,
+   color,
+   quantity * price as total_price,
+   length * width as area
+from TV
+where area > 10000
