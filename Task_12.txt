@@ -1,0 +1,126 @@
+create table types_of_surgeries (
+  id serial primary key,
+  type varchar(100) not null
+)
+
+insert into types_of_surgeries values
+(1, 'neuro'),
+(2, 'cardio'),
+(3, 'pediatric'),
+(4, 'plastic'),
+(5, 'vascular')
+
+-----------------------------
+
+create table patients (
+  id serial primary key,
+  name varchar(100),
+  email varchar unique not null
+)
+
+insert into patients values
+(1, 'jake', 'jakesql@example.com'),
+(2, 'griselda', 'griseldaesql@example.com'),
+(3, 'mavis', 'mavissql@example.com'),
+(4, 'andrew', 'andrewsql@example.com'),
+(5, 'lidya', 'lidyasql@example.com')
+
+----------------------------------
+
+create table chambers (
+  id serial primary key,
+  chamber_number varchar(100) not null,
+  is_taken boolean not null default false,
+  patient_id integer unique,
+  foreign key (patient_id) references patients(id) on delete set null
+)
+
+insert into chambers values
+(1, 'A001', False, Null),
+(2, 'A002', False, Null),
+(3, 'A003', False, Null),
+(4, 'A004', False, Null),
+(5, 'A005', False, Null)
+
+------------------------------------
+
+create table surgeons (
+  id serial primary key,
+  name varchar(100) NOT NULL,
+  email varchar(100) unique not null,
+  type_id integer,
+  foreign key (type_id) references types_of_surgeries(id) on delete set null
+)
+
+insert into surgeons values
+(1, 'derek', 'derekSQL@example.com', 1),
+(2, 'mark', 'markSQL@example.com', 2),
+(3, 'meredith', 'markSQL@example.com', 5),
+(4, 'lexi', 'lexiSQL@example.com', 4),
+(5, 'christina', 'christinaSQL@example.com', 2),
+(6, 'alex', 'alexSQL@example.com', 3),
+(7, 'richard', 'richardSQL@example.com', 5)
+
+-------------------------------------------------
+
+create table patient_type(
+  id serial primary key,
+  patient_id integer,
+  type_id integer
+  foreign key (patient_id) references patients(id),
+  foreign key (type_id) references types_of_surgeries(id)
+)
+
+insert into patient_type values
+(1, 4, 2),
+(2, 1, 5),
+(3, 5, 2),
+(4, 2, 4),
+(5, 4, 3)
+
+-------------------------------------
+OPERATIONS
+
+------many to many relation--------
+
+student_type თეიბლიდან ვირჩევ პაციენტებს,
+ რომლებსაც უწევთ კარდიო ქირურგია:
+ select * from patient_type where type_id = 2;
+
+student_type თეიბლიდან ვირჩევ პაციენტს,
+ რომeლსაც ერთზე მეტი ოპერაცია უწევს:
+ select * from patient_type where patient_id = 4;
+
+
+------one to one relation--------
+
+chambers თეიბლში ჯერ ვანიჭებ პაციენტებს პალატებს:
+update chambers set patient_id = 3, is_taken = True where id = 1
+update chambers set patient_id = 5, is_taken = True where id = 2
+update chambers set patient_id = 1, is_taken = True where id = 3
+update chambers set patient_id = 2, is_taken = True where id = 4
+update chambers set patient_id = 4, is_taken = True where id = 5
+თუ შევეცდები ერთი პალატის ორი პაციენტის
+ერთ პალატაში შეშვებას constraint fail-ს გამოიტანს
+
+
+chambers თეიბლიდან ვირჩევ შესაბამის პალატას:
+select * from chambers where patient_id = 4;
+
+------one to many relation----------
+
+surgeons თეიბლში ვნახულობ რამდენია 2 id-ს ტიპის ქირურგი:
+select * from surgeons where type_id = 2;
+
+surgeons თეიბლში ვნახულობ რამდენია 5 id-ს ტიპის ქირურგი:
+select * from surgeons where type_id = 5;
+
+
+
+
+
+
+
+
+
+
