@@ -1,0 +1,180 @@
+create table subject(
+  id serial primary key,
+  name varchar(100) not null,
+  credit varchar not null
+)
+
+
+insert into subject (id, name, credit)
+values
+(1, 'mathematic', 4),
+(2, 'physic', 3),
+(3, 'chemistry', 3),
+(4, 'biology', 4),
+(5, 'history', 3),
+(6, 'computer science', 5),
+(7, 'literature', 3),
+(8, 'geography', 2),
+(9, 'economics', 4),
+(10, 'art', 2),
+-----------------------------------------------
+create table student(
+  id serial primary key,
+  name varchar(100),
+  last_name varchar(100),
+  email varchar unique not null
+)
+
+
+insert into student values
+(1, 'john', 'doe', 'john.doe@example.com'),
+(2, 'jane', 'smith', 'jane.smith@example.com'),
+(3, 'michael', 'johnson', 'michael.johnson@example.com'),
+(4, 'emily', 'williams', 'emily.williams@example.com'),
+(5, 'robert', 'brown', 'robert.brown@example.com'),
+(6, 'jessica', 'miller', 'jessica.miller@example.com'),
+(7, 'william', 'taylor', 'william.taylor@example.com'),
+(8, 'olivia', 'anderson', 'olivia.anderson@example.com'),
+(9, 'james', 'martinez', 'james.martinez@example.com'),
+(10, 'sophia', 'garcia', 'sophia.garcia@example.com')
+
+
+-----------------------------------------------
+
+create table locker(
+  id serial primary key,
+  locker_number varchar(20) not null,
+  is_available boolean not null deult true,
+  student_id int unique,
+  foreign key (student_id) references student(id) on delete set null
+)
+
+insert into locker values
+(1, 'A001', TRUE, Null),
+(2, 'A002', TRUE, Null),
+(3, 'A003', TRUE, Null),
+(4, 'A004', TRUE, Null),
+(5, 'A005', TRUE, Null),
+(6, 'A006', TRUE, Null),
+(7, 'A007', TRUE, Null),
+(8, 'A008', TRUE, Null),
+(9, 'A009', TRUE, Null),
+(10, 'A010', TRUE, Null)
+-----------------------------------------------
+
+create table lecrturer(
+  id serial primary key,
+  name varchar(100),
+  email varchar(100) unique not null,
+  subject_id integer,
+  foreign key (subject_id) references subject(id) on delete set null
+)
+
+insert into lecrturer values
+(1, 'proffesor johnson', 'prof.johnson@example.com', 1),
+(2, 'Dr.smith', 'dr.smith@example.com', 2),
+(3, 'proffesor lee', 'prof.lee@example.com', 3),
+(4, 'Dr.brown', 'dr.brown@example.com', 4),
+(5, 'proffesor davis', 'prof.davis@example.com', 5),
+(6, 'Dr.willson', 'dr.willson@example.com', 6),
+(7, 'proffesor martinez', 'prof.martinez@example.com', 7),
+(8, 'Dr.garcia', 'dr.garcia@example.com', 8),
+(9, 'proffesor tylor', 'prof.taylor@example.com', 9),
+(10, 'Dr.andersen', 'dr.andersen@example.com', 10)
+
+
+
+-------------------------------------------------
+
+CREATE TABLE student_subject (
+    id SERIAL PRIMARY KEY,
+    student_id INTEGER,
+    subject_id INTEGER,
+    FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE SET NULL,
+    FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE SET NULL
+)
+
+
+insert into student_subject (student_id, subject_id) values
+(1,1),
+(1,3),
+(2,2),
+(2,4),
+(3,5),
+(3,6),
+(4,7),
+(4,8),
+(5,9),
+(5,10),
+(6,1),
+(6,7),
+(7,2),
+(7,8),
+(8,3),
+(8,9),
+(9,4),
+(9,10),
+(10,5),
+(10,6)
+
+----------------------------------------
+relations:
+
+ვნახულობ რამდენი სტუდენტია ისტორიაზე (many to many):
+select * from student_subject where subject_id = 5
+
+ვნახულობ რამდენი საგანი აქვს არჩეული olivia-ს (many to many):
+select * from student_subject where student_id = 8
+
+ვანიჭებ სტუდენტებს ლოქერებს (one to one):
+update locker set student_id = 1, is_available = false where id = 3
+update locker set student_id = 2, is_available = false where id = 7
+update locker set student_id = 3, is_available = false where id = 1
+
+ვნახულობ რომელი ლექტორი ასწავლის ეკონომიკას (one to many):
+select * from lecrturer where subject_id = 9
+
+---------------------------------------------
+JOINS:
+
+1. left join on lecrturer and subject:
+select
+     lecrturer.id,
+     lecrturer.name as lecturer_name,
+     email,
+     lecrturer.name as subject_name,
+     credit
+from lecrturer
+left join subject on lecrturer.subject_id = subject.id
+
+
+2. right join on student and locker:
+select
+     locker.id,
+     locker.number
+from locker
+right join student on locker.id = student.id
+
+
+
+3. left join on student and subject:
+
+select
+s.name as student_name,
+last_name,
+email,
+sub.name as subject_name,
+credit
+from student as s
+left join student_subject as s_s on s.id = s_s.student_id
+left join subject as sub on s_s.subject_id = sub.id
+
+
+4. inner join on student and locker:
+select * from student as s
+inner join locker as loc on s.id = loc.student_id
+
+
+5. full outer join join on student and locker:
+select * from student as s
+full outer join locker as loc on s.id = loc.student_id
