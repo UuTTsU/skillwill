@@ -507,6 +507,10 @@ select * from book where writer_id = 29
 
 update reader set active = True where id >=1
 
+delete from category where id > 5
+
+drop table category
+
 
 
 
